@@ -29,7 +29,7 @@ class CastNow:
 	RUN = '/usr/local/bin/castnow'
 
 	def cast(self, thing):
-		subprocess.call([SELF.RUN, '--address', self.DEFAULT, thing])
+		subprocess.call([self.RUN, '--address', self.DEFAULT, thing])
 
 
 class MyBot:
