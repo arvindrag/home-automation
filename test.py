@@ -68,10 +68,9 @@ class MyBot:
 
 def main():
 	try:
-		print MyBot("my.creds").handle({'text':"SEARCHFOR:who is America"})
-		# .run()
-		# while True:
-		# 	time.sleep(20)
+		MyBot("my.creds").run()
+		while True:
+			time.sleep(20)
 	except KeyboardInterrupt:
 		print 'done'
 		exit(0)
