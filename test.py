@@ -6,6 +6,8 @@ import telepot
 import urllib
 import subprocess
 from telepot.loop import MessageLoop
+from subprocess import Popen, PIPE
+from threading import Timer
 
 class PutIO:
 	def __init__(self, token):
@@ -28,8 +30,15 @@ class CastNow:
 	DEFAULT = BEDROOM
 	RUN = '/usr/local/bin/castnow'
 
-	def cast(self, thing):
-		subprocess.call([self.RUN, '--address', self.DEFAULT, thing])
+	def cast(self, thing, timeout_sec = 20):
+	    proc = Popen([self.RUN, '--address', self.DEFAULT, thing],
+	     			stdout=PIPE, stderr=PIPE)
+	    timer = Timer(timeout_sec, proc.kill)
+	    try:
+	        timer.start()
+	        stdout, stderr = proc.communicate()
+	    finally:
+	        timer.cancel()
 
 
 class MyBot:
