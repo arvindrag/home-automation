@@ -9,8 +9,8 @@ class CastNow:
 	def __init__(self, logger):
 		self.logger = logger
 
-	def cast(self, thing, timeout_sec = 25):
-		cmd = [self.RUN, '--address', self.DEFAULT, thing]
+	def cast(self, things, timeout_sec = 25):
+		cmd = [self.RUN, '--address', self.DEFAULT] + things
 		self.logger.info("casting: {}".format(' '.join(cmd)))
 		proc = subprocess.Popen(cmd, 
 			stdout=subprocess.PIPE, stderr=subprocess.PIPE)

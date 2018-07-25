@@ -54,9 +54,9 @@ class MyBot:
 			 			mp4s.append(f)			 			
 			self.logger.info("Files found: \n{}".format(',\n'.join([mp4['name'] for mp4 in mp4s])))
 			if mp4s:
-				link = self.putio.link(mp4s[0]['id'])
+				links = [self.putio.link(m['id']) for m in mp4s]
 				if not self.nocast:
-					self.castnow.cast(link)
+					self.castnow.cast(links)
 			else:
 				self.logger.info("No mp4s found :( ...")
 
