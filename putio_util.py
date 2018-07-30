@@ -54,6 +54,7 @@ class PutIO:
 					if xfer['transfer']['status'] == 'COMPLETED':
 						self.logger.info("xfer completed")
 						fileid = xfer['transfer']['file_id']
+						return fileid
 					if xfer['transfer']['down_speed'] == 0:
 						return None
 				else:
