@@ -4,7 +4,7 @@ import json
 import time
 
 class PutIO:
-	FETCH_WAIT_MINUTES = 3
+	FETCH_WAIT_SECONDS = 30
 	def __init__(self, token, logger):
 		self.logger = logger
 		self.API = "https://api.put.io/v2"
@@ -47,7 +47,7 @@ class PutIO:
 		if await:
 			self.logger.info("awaiting xfer")
 			fileid = None
-			for i in range(self.FETCH_WAIT_MINUTES*60*2):
+			for i in range(self.FETCH_WAIT_SECONDS*2):
 				time.sleep(0.5)
 				if fileid==None:				
 					xfer = self.check_xfer(xfer_id)
