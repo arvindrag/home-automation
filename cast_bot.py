@@ -9,6 +9,7 @@ import logging.config
 
 from putio_util import PutIO
 from castnow_util import CastNow
+from tpb_parser import TPBParser
 
 def isint(num):
 	try:
@@ -22,19 +23,21 @@ class MyBot:
 	EPPAT = r"(.*)season ([0-9]+) episode ([0-9]+)"
 	def __init__(self, creds, logger, nocast = False):
 		self.logger = logger
+		self.logger.info('Starting up the cast bot...')
 		self.nocast = nocast
 		self.creds = creds
 		self.telebot = telepot.Bot(self.creds["creds"]["telegram_bot_token"])
 		self.putio = PutIO(self.creds["creds"]["put_io_token"], self.logger)
-		self.castnow = CastNow(self.logger)
-		self.logger.info('Starting up the cast bot...')
+		self.castnow = CastNow(self.logger, nocast)
+		self.tpb = TPBParser(self.logger)
+		
 	
 	def pars(self, msg):
 		msg = re.sub(r'[^a-zA-Z0-9\s]', '', msg)
 		m = re.match(self.EPPAT, msg)
 		if m:
 			string, season, episode = m.groups()
-			options = ["%s S%02dE%02d"%(string, int(season), int(episode)), "%s %s%s"%(string, int(season), int(episode))]
+			options = ["%s S%02dE%02d"%(string, int(season), int(episode))]
 		else:
 			options = [msg.replace(' ', '%20')]
 		options = [o.replace(' ', '%20') for o in options]
@@ -44,21 +47,19 @@ class MyBot:
 		self.logger.info("Received msg: \n{}".format(json.dumps(msg, indent=2)))
 		m = re.match(self.SEARCHPAT, msg['text'])
 		if m:
-			self.logger.info('looking for {}'.format(m.groups()[0]))
-			options = self.pars(m.groups()[0])
-			self.logger.info('looking for {}'.format(options))
-			mp4s = list()
-			for o in options:
-				for f in self.putio.search(o)['files']:
-					if f["is_mp4_available"]:
-			 			mp4s.append(f)			 			
-			self.logger.info("Files found: \n{}".format(',\n'.join([mp4['name'] for mp4 in mp4s])))
-			if mp4s:
-				links = [self.putio.link(m['id']) for m in mp4s]
-				if not self.nocast:
-					self.castnow.cast(links)
-			else:
-				self.logger.info("No mp4s found :( ...")
+			searchtext = m.groups()[0]
+			self.logger.info('looking for {}'.format(searchtext))
+			schtext = self.pars(searchtext)[0]
+			self.logger.info('looking for {}'.format(schtext))
+			magnet = self.tpb.get_magnet_links(schtext)[0]
+			name = self.putio.add_and_await(magnet)
+			self.logger.info("File found: {}".format(name))
+
+			fileses = self.putio.search(schtext)['files']
+			mp4s = [f for f in fileses if f['is_mp4_available']]
+			self.logger.info("attempting castnow")
+			self.castnow.cast(self.putio.link(mp4s[0]['id']))
+
 
 	def start_msg_loop(self):
 		self.logger.info("Starting msg handler loop..")
@@ -83,7 +84,7 @@ def main():
 
 def test():
 	creds, logger = setup()
-	print MyBot(creds, logger, True).handle({"text":"SEARCHFOR: Legion season 2 episode 10"})
+	print MyBot(creds, logger, True)
 
 if __name__ == '__main__':
 	main() 

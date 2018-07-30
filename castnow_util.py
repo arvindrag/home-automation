@@ -6,17 +6,22 @@ class CastNow:
 	DEFAULT = BEDROOM
 	RUN = '/usr/local/bin/castnow'
 
-	def __init__(self, logger):
+	def __init__(self, logger, dryrun = False):
 		self.logger = logger
+		self.dryrun = dryrun
 
 	def cast(self, things, timeout_sec = 25):
-		cmd = [self.RUN, '--address', self.DEFAULT] + things
-		self.logger.info("casting: {}".format(' '.join(cmd)))
-		proc = subprocess.Popen(cmd, 
-			stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		timer = threading.Timer(timeout_sec, proc.kill)
-		try:
-			timer.start()
-			stdout, stderr = proc.communicate()
-		finally:
-			timer.cancel()
+		if self.dryrun:
+			self.logger.info("Not Casting: {}".format(things))
+		else:
+			self.logger.info("Casting: {}".format(things))
+			cmd = [self.RUN, '--address', self.DEFAULT, things]
+			self.logger.info("casting: {}".format(' '.join(cmd)))
+			proc = subprocess.Popen(cmd, 
+				stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			timer = threading.Timer(timeout_sec, proc.kill)
+			try:
+				timer.start()
+				stdout, stderr = proc.communicate()
+			finally:
+				timer.cancel()
