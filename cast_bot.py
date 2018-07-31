@@ -19,7 +19,18 @@ def isint(num):
 		return False
 
 class MyBot:
-	SEARCHPAT = r".*SEARCHFOR:(.*)"
+	ADD_AND_CAST_PAT = 	r"/ADDCAST:(.*)"
+	SEARCHPAT = 	r"/SEARCHCAST:(.*)"
+	JUSTADDPAT = 	r"/JUSTADD:(.*)"
+	CLEANPAT = 	r"/CLEAN:(.*)"
+	def ACTION_MAP(self): 
+		dic = {
+		self.ADD_AND_CAST_PAT: self.add_and_cast,
+		# SEARCHPAT: self.search_and_cast,
+		self.JUSTADDPAT: self.just_add
+		# CLEAN: self.clean
+		}
+		return dic
 	EPPAT = r"(.*)season ([0-9]+) episode ([0-9]+)"
 	def __init__(self, creds, logger, nocast = False):
 		self.logger = logger
@@ -37,29 +48,42 @@ class MyBot:
 		m = re.match(self.EPPAT, msg)
 		if m:
 			string, season, episode = m.groups()
-			options = ["%s S%02dE%02d"%(string, int(season), int(episode))]
+			options = "%s S%02dE%02d"%(string, int(season), int(episode))
 		else:
-			options = [msg.replace(' ', '%20')]
-		options = [o.replace(' ', '%20') for o in options]
-		return options
+			options = msg
+		return options.replace(' ', '%20')
+
+	def add_and_cast(self, searchstr):
+		self.logger.info('add and cast for {}'.format(searchstr))
+		self.logger.info('looking for {}'.format(searchstr))
+		magnet = self.tpb.get_magnet_links(searchstr)
+		name = self.putio.add_and_await(magnet)
+		self.logger.info("File found: {}".format(name))
+
+		fileses = self.putio.search(searchstr)['files']
+		mp4s = [f for f in fileses if f['is_mp4_available']]
+		self.logger.info("attempting castnow")
+		self.castnow.cast(self.putio.link(mp4s[0]['id']))
+
+	def just_add(self, searchstr):
+		self.logger.info('add and cast for {}'.format(searchstr))
+		self.logger.info('looking for {}'.format(searchstr))
+		magnet = self.tpb.get_magnet_links(searchstr)
+		name = self.putio.add(magnet)
+
+	# def clean(self, searchstr):
+	# 	files = self.putio.search(searchstr)
+	# 	for f in files:
+	# 		self.putio.
 
 	def handle(self, msg):
 		self.logger.info("Received msg: \n{}".format(json.dumps(msg, indent=2)))
-		m = re.match(self.SEARCHPAT, msg['text'])
-		if m:
-			searchtext = m.groups()[0]
-			self.logger.info('looking for {}'.format(searchtext))
-			schtext = self.pars(searchtext)[0]
-			self.logger.info('looking for {}'.format(schtext))
-			magnet = self.tpb.get_magnet_links(schtext)[0]
-			name = self.putio.add_and_await(magnet)
-			self.logger.info("File found: {}".format(name))
-
-			fileses = self.putio.search(schtext)['files']
-			mp4s = [f for f in fileses if f['is_mp4_available']]
-			self.logger.info("attempting castnow")
-			self.castnow.cast(self.putio.link(mp4s[0]['id']))
-
+		for pat in self.ACTION_MAP():
+			m = re.match(pat, msg['text'])
+			if m:
+				searchstr = self.pars(m.groups()[0])
+				action = self.ACTION_MAP()[pat]
+				action(searchstr)
 
 	def start_msg_loop(self):
 		self.logger.info("Starting msg handler loop..")
@@ -84,7 +108,7 @@ def main():
 
 def test():
 	creds, logger = setup()
-	print MyBot(creds, logger, True)
+	MyBot(creds, logger, True).handle({'text':"/ADDCAST:the good fight season 1 episode 1"})
 
 if __name__ == '__main__':
 	main() 

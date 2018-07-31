@@ -3,6 +3,7 @@ import subprocess
 
 class CastNow:
 	BEDROOM = '192.168.7.22'
+	TV = '192.168.7.20'
 	DEFAULT = BEDROOM
 	RUN = '/usr/local/bin/castnow'
 
