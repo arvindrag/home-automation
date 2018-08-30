@@ -53,17 +53,23 @@ class MyBot:
 			options = msg
 		return options.replace(' ', '%20')
 
-	def add_and_cast(self, searchstr):
+	def add_and_cast(self, searchstr, wait=120):
 		self.logger.info('add and cast for {}'.format(searchstr))
 		self.logger.info('looking for {}'.format(searchstr))
 		magnet = self.tpb.get_magnet_links(searchstr)
 		name = self.putio.add_and_await(magnet)
 		self.logger.info("File found: {}".format(name))
 
-		fileses = self.putio.search(searchstr)['files']
-		mp4s = [f for f in fileses if f['is_mp4_available']]
-		self.logger.info("attempting castnow")
-		self.castnow.cast(self.putio.link(mp4s[0]['id']))
+		start = time.time()
+		while(time.time()<start+wait):
+			fileses = self.putio.search(searchstr)['files']
+			mp4s = [f for f in fileses if f['is_mp4_available']]
+			if(len(mp4s)<1):
+				continue
+			else:
+				break
+			self.logger.info("attempting castnow")
+			self.castnow.cast(self.putio.link(mp4s[0]['id']))
 
 	def just_add(self, searchstr):
 		self.logger.info('add and cast for {}'.format(searchstr))
