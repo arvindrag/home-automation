@@ -48,7 +48,7 @@ class MyBot:
 		m = re.match(self.EPPAT, msg)
 		if m:
 			string, season, episode = m.groups()
-			options = "%s S%02dE%02d"%(string, int(season), int(episode))
+			options = "%s S%02dE%02d 720p"%(string, int(season), int(episode))
 		else:
 			options = msg
 		return options.replace(' ', '%20')
@@ -67,9 +67,10 @@ class MyBot:
 			if(len(mp4s)<1):
 				continue
 			else:
+				self.logger.info("attempting castnow")
+				self.castnow.cast(self.putio.link(mp4s[0]['id']))
 				break
-			self.logger.info("attempting castnow")
-			self.castnow.cast(self.putio.link(mp4s[0]['id']))
+			
 
 	def just_add(self, searchstr):
 		self.logger.info('add and cast for {}'.format(searchstr))
