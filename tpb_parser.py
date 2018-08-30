@@ -2,7 +2,7 @@ import requests
 import re
 
 class TPBParser:
-	API = 'https://pirateproxy.fun'
+	API = 'https://ikwilthepiratebay.org/'
 	def __init__(self, logger):
 		self.logger = logger
 
