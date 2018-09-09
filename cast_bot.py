@@ -53,6 +53,10 @@ class MyBot:
 			options = msg
 		return options.replace(' ', '%20')
 
+	def mp4s(files):
+		mp4s = [f for f in fileses if f['is_mp4_available'] or f["content_type"]=="video/mp4"]
+		return mp4s
+
 	def add_and_cast(self, searchstr, wait=120):
 		self.logger.info('add and cast for {}'.format(searchstr))
 		self.logger.info('looking for {}'.format(searchstr))
@@ -64,7 +68,7 @@ class MyBot:
 		while(time.time()<start+wait):
 			fileses = self.putio.search(searchstr)['files']
 			mp4s = [f for f in fileses if f['is_mp4_available']]
-			if(len(mp4s)<1):
+			if(len(mp4s(fileses))<1):
 				if(fileses>0):
 					self.logger.info("files but no mp4!")	
 				continue
@@ -117,7 +121,7 @@ def main():
 
 def test():
 	creds, logger = setup()
-	MyBot(creds, logger, True).handle({'text':"/ADDCAST:the good fight season 1 episode 1"})
+	print json.dumps(MyBot(creds, logger, True).putio.search("Lord of the rings")['files'], indent=4)
 
 if __name__ == '__main__':
 	main() 
