@@ -4,6 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
+User=pi
 ExecStart=/usr/bin/python /home/pi/home-automation/cast_bot.py
 
 [Install]
