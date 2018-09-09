@@ -104,7 +104,7 @@ class MyBot:
 		MessageLoop(self.telebot, self.handle).run_as_thread()
 
 def setup():
-	BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+	BASE_DIR=os.path.dirname(os.path.abspath(__file__))
 	print os.path.join(BASE_DIR,'logging.ini')
 	logging.config.fileConfig(os.path.join(BASE_DIR,'logging.ini'))
 	# get an instance of the logger object this module will use
