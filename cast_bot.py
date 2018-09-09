@@ -48,7 +48,7 @@ class MyBot:
 		m = re.match(self.EPPAT, msg)
 		if m:
 			string, season, episode = m.groups()
-			options = "%s S%02dE%02d 720p"%(string, int(season), int(episode))
+			options = "%s S%02dE%02d"%(string, int(season), int(episode))
 		else:
 			options = msg
 		return options.replace(' ', '%20')
