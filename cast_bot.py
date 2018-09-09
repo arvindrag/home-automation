@@ -105,8 +105,8 @@ class MyBot:
 
 def setup():
 	BASE_DIR=os.path.dirname(os.path.abspath(__file__))
-	print os.path.join(BASE_DIR,'logging.ini')
-	logging.config.fileConfig(os.path.join(BASE_DIR,'logging.ini'))
+
+	logging.config.fileConfig(os.path.join(BASE_DIR,"logging.ini"))
 	# get an instance of the logger object this module will use
 	logger = logging.getLogger(__name__)
 	# instantiate the JournaldLogHandler to hook into systemd
@@ -116,7 +116,7 @@ def setup():
 	# add the journald handler to the current logger
 	logger.addHandler(journald_handler)
 	
-	creds = json.loads(open("my.creds", "r").read())
+	creds = json.loads(open(os.path.join(BASE_DIR,"my.creds"), "r").read())
 	return creds, logger
 
 def main():
