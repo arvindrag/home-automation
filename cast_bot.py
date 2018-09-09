@@ -69,8 +69,6 @@ class MyBot:
 			fileses = self.putio.search(searchstr)['files']
 			mp4s = self.mp4s(fileses)
 			if(len(mp4s)<1):
-				if(fileses>0):
-					self.logger.info("files but no mp4!")	
 				continue
 			else:
 				self.logger.info("attempting castnow")
