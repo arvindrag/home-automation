@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import time
@@ -103,7 +104,8 @@ class MyBot:
 		MessageLoop(self.telebot, self.handle).run_as_thread()
 
 def setup():
-	logging.config.fileConfig('logging.ini')
+	BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+	logging.config.fileConfig(os.path.join(BASE_DIR,'logging.ini'))
 	# get an instance of the logger object this module will use
 	logger = logging.getLogger(__name__)
 	# instantiate the JournaldLogHandler to hook into systemd
