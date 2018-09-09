@@ -105,6 +105,7 @@ class MyBot:
 
 def setup():
 	BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+	print os.path.join(BASE_DIR,'logging.ini')
 	logging.config.fileConfig(os.path.join(BASE_DIR,'logging.ini'))
 	# get an instance of the logger object this module will use
 	logger = logging.getLogger(__name__)
