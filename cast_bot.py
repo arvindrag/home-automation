@@ -67,8 +67,7 @@ class MyBot:
 		start = time.time()
 		while(time.time()<start+wait):
 			fileses = self.putio.search(searchstr)['files']
-			mp4s = [f for f in fileses if f['is_mp4_available']]
-			if(len(mp4s(fileses))<1):
+			if(len(self.mp4s(fileses))<1):
 				if(fileses>0):
 					self.logger.info("files but no mp4!")	
 				continue
