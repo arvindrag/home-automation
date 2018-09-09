@@ -1,0 +1,10 @@
+[Unit]
+Description=My casting bot service
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python /home/pi/home-automation/cast_bot.py
+
+[Install]
+WantedBy=multi-user.target
