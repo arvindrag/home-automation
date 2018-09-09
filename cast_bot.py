@@ -53,7 +53,7 @@ class MyBot:
 			options = msg
 		return options.replace(' ', '%20')
 
-	def mp4s(files):
+	def mp4s(self, files):
 		mp4s = [f for f in fileses if f['is_mp4_available'] or f["content_type"]=="video/mp4"]
 		return mp4s
 
