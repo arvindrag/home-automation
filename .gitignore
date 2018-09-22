@@ -1,5 +1,7 @@
 *.creds
 *.pyc
+my.creds
 session.cookie
 memory
-tmp*
+
+
