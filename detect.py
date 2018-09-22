@@ -111,7 +111,13 @@ class Detector:
         phone_number = self.creds['ids']['eero_phone']
         if self.eero.needs_login():
             user_token = self.eero.login(phone_number)
-            verification_code = raw_input('verification key from SMS: ')
+            for i in range(30):
+                verifile = os.path.join(BASE_DIR,"verifile")
+                if os.isfile(verifile):
+                    verification_code = open(verifile, "r").read().strip()
+                    break
+                else:
+                    sleep(2)
             self.eero.login_verify(verification_code, user_token)
         account = self.eero.account()
         self.network = account['networks']['data'][0]
