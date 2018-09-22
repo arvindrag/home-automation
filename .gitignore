@@ -1,2 +1,5 @@
 *.creds
 *.pyc
+session.cookie
+memory
+tmp*
