@@ -116,7 +116,10 @@ class Detector:
                 self.logger.info("waiting on verifile!")
                 if os.path.isfile(verifile):
                     self.logger.info("found!")
-                    verification_code = open(verifile, "r").read().strip()
+                    verfilefd = open(verifile, "r")
+                    verification_code = verifilefd.read().strip()
+                    verifilefd.close()
+                    os.remove(verifile)
                     break
                 else:
                     self.logger.info("not found :(")
