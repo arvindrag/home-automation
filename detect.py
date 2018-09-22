@@ -113,7 +113,7 @@ class Detector:
             user_token = self.eero.login(phone_number)
             for i in range(30):
                 verifile = os.path.join(BASE_DIR,"verifile")
-                if os.isfile(verifile):
+                if os.path.isfile(verifile):
                     verification_code = open(verifile, "r").read().strip()
                     break
                 else:
