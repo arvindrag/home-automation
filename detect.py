@@ -110,7 +110,7 @@ class Detector:
         self.eero = eerolib.Eero(session)
         phone_number = self.creds['ids']['eero_phone']
         if self.eero.needs_login():
-            user_token = self.eero.login()
+            user_token = self.eero.login(phone_number)
             verification_code = raw_input('verification key from SMS: ')
             self.eero.login_verify(verification_code, user_token)
         account = self.eero.account()
