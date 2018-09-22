@@ -60,12 +60,6 @@ class Memory:
 
 
 class Detector:
-    KNOWN_DEVICES = {"Arvinds-iPhone" : "Arvind",
-    "Poojas-iPhone" : "Pooja",
-    "mmadhavssiPhone" : "Madhav",
-    "Nehas-rose-gold-iPhone-7" : "Neha",
-    "Uday-Kiran-Medisettys-iPhone" : "Uday"
-    }
 
     AWAY_THRESHOLD_SECS = 3600
     SLEEP = 2
