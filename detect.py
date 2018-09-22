@@ -106,7 +106,7 @@ class Detector:
         # self.logger.addHandler(journald_handler)
 
         self.creds = json.loads(open(os.path.join(BASE_DIR,"my.creds"), "r").read())
-        session = CookieStore('session.cookie')
+        session = CookieStore(os.path.join(BASE_DIR,'session.cookie'))
         self.eero = eerolib.Eero(session)
         phone_number = self.creds['ids']['eero_phone']
         if self.eero.needs_login():
