@@ -111,13 +111,16 @@ class Detector:
         phone_number = self.creds['ids']['eero_phone']
         if self.eero.needs_login():
             user_token = self.eero.login(phone_number)
+            verifile = os.path.join(BASE_DIR,"verifile")
             for i in range(30):
-                verifile = os.path.join(BASE_DIR,"verifile")
+                self.logger.info("waiting on verifile!")
                 if os.path.isfile(verifile):
+                    self.logger.info("found!")
                     verification_code = open(verifile, "r").read().strip()
                     break
                 else:
-                    sleep(2)
+                    self.logger.info("not found :(")
+                    time.sleep(2)
             self.eero.login_verify(verification_code, user_token)
         account = self.eero.account()
         self.network = account['networks']['data'][0]
