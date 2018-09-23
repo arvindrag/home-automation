@@ -10,6 +10,8 @@ import logging
 import logging.config
 from datetime import datetime
 import telepot
+import subprocess
+import castnow_util
 # from systemd.journal import JournalHandler
 
 class CookieStore(eerolib.SessionStorage):
@@ -57,11 +59,9 @@ class Memory:
         self.store['stored'] = time.time()
         self.memorize()
 
-
-
 class Detector:
 
-    AWAY_THRESHOLD_SECS = 3600
+    AWAY_THRESHOLD_SECS = 30
     SLEEP = 2
     ERROR = 4
     EPOCH0 = datetime(1970,1,1)
@@ -140,6 +140,9 @@ class Detector:
             if len(returned)>0:
                 self.telebot.sendMessage(self.creds['ids']['telegram_id'], 
                     "returned device found: {}".format(returned))
+                for r in returned:
+                    name = r.lower().replace('_','').replace('iphone','').replace('phone','').strip('s')
+                    subprocess.check_call(["flite","-o","{}.wav".format(name),"Detected {}".format(name)])
             time.sleep(self.SLEEP)
 
 def main():
