@@ -11,8 +11,8 @@ import logging.config
 from datetime import datetime
 import telepot
 import subprocess
-import castnow_util
-# from systemd.journal import JournalHandler
+from castnow_util import CastNow
+from systemd.journal import JournalHandler
 
 class CookieStore(eerolib.SessionStorage):
     def __init__(self, cookie_file):
@@ -99,11 +99,11 @@ class Detector:
         # get an instance of the logger object this module will use
         self.logger = logging.getLogger(__name__)
         # instantiate the JournaldLogHandler to hook into systemd
-        # journald_handler = JournalHandler()
+        journald_handler = JournalHandler()
         # set a formatter to include the level name
-        # journald_handler.setFormatter(logging.Formatter('[%(levelname)s] %(message)s'))
+        journald_handler.setFormatter(logging.Formatter('[%(levelname)s] %(message)s'))
         # add the journald handler to the current logger
-        # self.logger.addHandler(journald_handler)
+        self.logger.addHandler(journald_handler)
 
         self.creds = json.loads(open(os.path.join(BASE_DIR,"my.creds"), "r").read())
         session = CookieStore(os.path.join(BASE_DIR,'session.cookie'))
@@ -131,6 +131,7 @@ class Detector:
         self.memory = Memory(os.path.join(BASE_DIR,"memory"), self.logger)
         self.basedir = BASE_DIR
         self.telebot = telepot.Bot(self.creds["creds"]["telegram_bot_token"])
+        self.castnow = CastNow(self.logger, nocast)
 
     def detect(self):
         while True:
@@ -142,7 +143,9 @@ class Detector:
                     "returned device found: {}".format(returned))
                 for r in returned:
                     name = r.lower().replace('_','').replace('iphone','').replace('phone','').strip('s')
-                    subprocess.check_call(["flite","-o","{}.wav".format(name),"Detected {}".format(name)])
+                    path = os.path.join(self.basedir, name+".wav")
+                    subprocess.call(["flite","-o",path,"Proximity Warning, detected {}".format(name)])
+                    self.castnow.cast(path, 'LIVING_ROOM')
             time.sleep(self.SLEEP)
 
 def main():
