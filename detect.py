@@ -131,7 +131,7 @@ class Detector:
         self.memory = Memory(os.path.join(BASE_DIR,"memory"), self.logger)
         self.basedir = BASE_DIR
         self.telebot = telepot.Bot(self.creds["creds"]["telegram_bot_token"])
-        self.castnow = CastNow(self.logger, nocast)
+        self.castnow = CastNow(self.logger)
 
     def detect(self):
         while True:
