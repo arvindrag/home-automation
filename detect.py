@@ -61,7 +61,7 @@ class Memory:
 
 class Detector:
 
-    AWAY_THRESHOLD_SECS = 30
+    AWAY_THRESHOLD_SECS = 3600
     SLEEP = 2
     ERROR = 4
     EPOCH0 = datetime(1970,1,1)
