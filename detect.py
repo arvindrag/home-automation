@@ -80,9 +80,9 @@ class Detector:
         for l in live:
             lastseen = self.memory.recall(l['hostname'])
             if not lastseen:
-                self.logger.info("live device: {} never seen, using eero".format(l['hostname']))
-                lastseen = self.to_utc_epoch(datetime.strptime(l['last_active'], '%Y-%m-%dT%H:%M:%S.%fZ'))
-                self.logger.info("using {}->{}".format(l['last_active'], lastseen))
+                self.logger.info("live device: {} never seen, zero".format(l['hostname']))
+                lastseen = 0
+                
             secsago = now - lastseen
             self.logger.info("live device: {}: last seen {} seconds ago({})".format(
                 l['hostname'], int(secsago), int(lastseen)))
