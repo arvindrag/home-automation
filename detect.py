@@ -145,7 +145,7 @@ class Detector:
                     name = r.lower().replace('_','').replace('iphone','').replace('phone','').strip('s')
                     path = os.path.join(self.basedir, name+".wav")
                     subprocess.call(["flite","-o",path,"Proximity Warning, detected {}".format(name)])
-                    self.castnow.cast(path, 'LIVING_ROOM')
+                    self.castnow.cast(path, device='LIVING_ROOM')
             time.sleep(self.SLEEP)
 
 def main():
