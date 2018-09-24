@@ -80,13 +80,12 @@ class Detector:
         for l in live:
             lastseen = self.memory.recall(l['hostname'])
             if not lastseen:
-                self.logger.info("live device: {} never seen, zero".format(l['hostname']))
+                self.logger.info("live device: {} never seen".format(l['hostname']))
                 lastseen = 0
-                
             secsago = now - lastseen
             self.logger.info("live device: {}: last seen {} seconds ago({})".format(
                 l['hostname'], int(secsago), int(lastseen)))
-            if secsago > (self.AWAY_THRESHOLD_SECS):
+            if(secsago > (self.AWAY_THRESHOLD_SECS)):
                 self.logger.info("device {} seen > {} seconds ago! appending!".format(l['hostname'], secsago, self.AWAY_THRESHOLD_SECS))
                 returned.append(l['hostname'])
             else:
