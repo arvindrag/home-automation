@@ -86,11 +86,29 @@ class Detector:
             secsago = now - lastseen
             self.logger.info("live device: {}: last seen {} seconds ago({})".format(
                 l['hostname'], int(secsago), int(lastseen)))
-            if secsago > self.AWAY_THRESHOLD_SECS + self.ERROR:
+            if secsago > (self.AWAY_THRESHOLD_SECS):
+                self.logger.info("device {} seen > {} seconds ago! appending!".format(l['hostname'], secsago, self.AWAY_THRESHOLD_SECS))
                 returned.append(l['hostname'])
+            else:
+                self.logger.info("{} seen only {} seconds ago".format(l['hostname'], secsago))
         status = dict([(l['hostname'], now) for l in live])
         self.memory.remember(status)
         return returned
+
+    def detect(self):
+        while True:
+            devices = self.eero.devices(self.network['url'])
+            returned = self.check_phones(devices)
+            self.logger.info("returned device(s) found: {}".format(returned))
+            if len(returned)>0:
+                self.telebot.sendMessage(self.creds['ids']['telegram_id'], 
+                    "returned device found: {}".format(returned))
+                for r in returned:
+                    name = r.lower().split('-')[0].split('_')[0].replace('iphone','').replace('phone','').strip('s')
+                    path = os.path.join(self.basedir, name+".wav")
+                    subprocess.call(["flite","-o",path,"Proximity Warning, {0} detected. Repeat {0} has been detected ".format(name)])
+                    self.castnow.cast(path, device='LIVING_ROOM')
+            time.sleep(self.SLEEP)
 
     def __init__(self):
         BASE_DIR=os.path.dirname(os.path.abspath(__file__))
@@ -133,20 +151,6 @@ class Detector:
         self.telebot = telepot.Bot(self.creds["creds"]["telegram_bot_token"])
         self.castnow = CastNow(self.logger)
 
-    def detect(self):
-        while True:
-            devices = self.eero.devices(self.network['url'])
-            returned = self.check_phones(devices)
-            self.logger.info("returned device found: {}".format(returned))
-            if len(returned)>0:
-                self.telebot.sendMessage(self.creds['ids']['telegram_id'], 
-                    "returned device found: {}".format(returned))
-                for r in returned:
-                    name = r.lower().split('-')[0].split('_')[0].replace('iphone','').replace('phone','').strip('s')
-                    path = os.path.join(self.basedir, name+".wav")
-                    subprocess.call(["flite","-o",path,"Proximity Warning, {0} detected. Repeat {0} has been detected ".format(name)])
-                    self.castnow.cast(path, device='LIVING_ROOM')
-            time.sleep(self.SLEEP)
 
 def main():
     detector = Detector()
