@@ -37,7 +37,8 @@ class MyBot:
 		}
 		return dic
 	EPPAT = r"(.*)season ([0-9]+) episode ([0-9]+)"
-	def __init__(self, creds, logger, nocast = False):
+	def __init__(self, creds, logger, basedir, nocast = False):
+		self.basedir=basedir
 		self.logger = logger
 		self.logger.info('Starting up the cast bot...')
 		self.nocast = nocast
@@ -48,7 +49,8 @@ class MyBot:
 		self.tpb = TPBParser(self.logger)
 	
 	def replace_verifile(self, text):
-		v = open(self.verifile, "w")
+		verifile = os.path.join(self.basedir, 'verifile')
+		v = open(verifile, "w")
 		self.logger("writing verifile: {} with {}".format(self.verifile, text))
 		v.write(text)
 		v.close()
@@ -114,7 +116,6 @@ class MyBot:
 
 def setup():
 	BASE_DIR=os.path.dirname(os.path.abspath(__file__))
-	self.verifile = os.path.join(BASE_DIR, 'verifile')
 
 	logging.config.fileConfig(os.path.join(BASE_DIR,"logging.ini"))
 	# get an instance of the logger object this module will use
@@ -125,15 +126,15 @@ def setup():
 	journald_handler.setFormatter(logging.Formatter('[%(levelname)s] %(message)s'))
 	# add the journald handler to the current logger
 	logger.addHandler(journald_handler)
-	
 	creds = json.loads(open(os.path.join(BASE_DIR,"my.creds"), "r").read())
-	return creds, logger
+	return creds, logger, BASE_DIR
 
 def main():
 	try:
-		creds, logger = setup()
+		creds, logger, basedir = setup()
 		logger.info("Starting cast bot..")
-		MyBot(creds, logger).start_msg_loop()
+
+		MyBot(creds, logger, basedir).start_msg_loop()
 		while True:
 			time.sleep(20)
 	except KeyboardInterrupt:
