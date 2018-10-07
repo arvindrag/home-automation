@@ -112,7 +112,7 @@ class Detector:
     def verify(self, phone_number):
         if self.eero.needs_login():
             user_token = self.eero.login(phone_number)
-            verifile = os.path.join(BASE_DIR,"verifile")
+            verifile = self.verifile
             os.remove(verifile)
             while self.eero.needs_login():
                 for i in range(60):
@@ -131,6 +131,7 @@ class Detector:
 
     def __init__(self):
         BASE_DIR=os.path.dirname(os.path.abspath(__file__))
+        self.verifile = os.path.join(BASE_DIR,"verifile")
         
         logging.config.fileConfig(os.path.join(BASE_DIR,"logging.ini"))
         # get an instance of the logger object this module will use
