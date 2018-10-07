@@ -51,7 +51,7 @@ class MyBot:
 	def replace_verifile(self, text):
 		verifile = os.path.join(self.basedir, 'verifile')
 		v = open(verifile, "w")
-		self.logger.info("writing verifile: {} with {}".format(self.verifile, text))
+		self.logger.info("writing verifile: {} with {}".format(verifile, text))
 		v.write(text)
 		v.close()
 
