@@ -32,6 +32,7 @@ class MyBot:
 		# SEARCHPAT: self.search_and_cast,
 		self.JUSTADDPAT: self.just_add
 		# CLEAN: self.clean
+		r"[0-9]*": self.replace_verifile
 		}
 		return dic
 	EPPAT = r"(.*)season ([0-9]+) episode ([0-9]+)"
@@ -44,8 +45,12 @@ class MyBot:
 		self.putio = PutIO(self.creds["creds"]["put_io_token"], self.logger)
 		self.castnow = CastNow(self.logger, nocast)
 		self.tpb = TPBParser(self.logger)
-		
 	
+	def replace_verifile(self, text):
+		v = open(self.verifile, "w")
+		v.write(text)
+		v.close()
+
 	def pars(self, msg):
 		msg = re.sub(r'[^a-zA-Z0-9\s]', '', msg)
 		m = re.match(self.EPPAT, msg)
@@ -98,6 +103,7 @@ class MyBot:
 				searchstr = self.pars(m.groups()[0])
 				action = self.ACTION_MAP()[pat]
 				action(searchstr)
+				break
 
 	def start_msg_loop(self):
 		self.logger.info("Starting msg handler loop..")
@@ -105,6 +111,7 @@ class MyBot:
 
 def setup():
 	BASE_DIR=os.path.dirname(os.path.abspath(__file__))
+	self.verifile = os.path.join(BASE_DIR, 'verifile')
 
 	logging.config.fileConfig(os.path.join(BASE_DIR,"logging.ini"))
 	# get an instance of the logger object this module will use

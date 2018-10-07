@@ -109,6 +109,25 @@ class Detector:
                     self.castnow.cast(path, device='LIVING_ROOM')
             time.sleep(self.SLEEP)
 
+    def verify(self, phone_number):
+        if self.eero.needs_login():
+            user_token = self.eero.login(phone_number)
+            verifile = os.path.join(BASE_DIR,"verifile")
+            while self.eero.needs_login():
+                for i in range(60):
+                    self.logger.info("waiting on verifile!")
+                    if os.path.isfile(verifile):
+                        self.logger.info("found!")
+                        verifilefd = open(verifile, "r")
+                        verification_code = verifilefd.read().strip()
+                        verifilefd.close()
+                        os.remove(verifile)
+                        break
+                    else:
+                        self.logger.info("verifile not found :(")
+                        time.sleep(2)
+            self.eero.login_verify(verification_code, user_token)
+
     def __init__(self):
         BASE_DIR=os.path.dirname(os.path.abspath(__file__))
         
@@ -125,23 +144,9 @@ class Detector:
         self.creds = json.loads(open(os.path.join(BASE_DIR,"my.creds"), "r").read())
         session = CookieStore(os.path.join(BASE_DIR,'session.cookie'))
         self.eero = eerolib.Eero(session)
-        phone_number = self.creds['ids']['eero_phone']
-        if self.eero.needs_login():
-            user_token = self.eero.login(phone_number)
-            verifile = os.path.join(BASE_DIR,"verifile")
-            for i in range(30):
-                self.logger.info("waiting on verifile!")
-                if os.path.isfile(verifile):
-                    self.logger.info("found!")
-                    verifilefd = open(verifile, "r")
-                    verification_code = verifilefd.read().strip()
-                    verifilefd.close()
-                    os.remove(verifile)
-                    break
-                else:
-                    self.logger.info("not found :(")
-                    time.sleep(2)
-            self.eero.login_verify(verification_code, user_token)
+        
+        self.verify(self.creds['ids']['eero_phone'])
+
         account = self.eero.account()
         self.network = account['networks']['data'][0]
         self.tmpdir = os.path.join(BASE_DIR,"tmp")
