@@ -123,11 +123,12 @@ class Detector:
                         verification_code = verifilefd.read().strip()
                         verifilefd.close()
                         os.remove(verifile)
+                        self.eero.login_verify(verification_code, user_token)
                         break
                     else:
                         self.logger.info("verifile not found :(")
                         time.sleep(2)
-            self.eero.login_verify(verification_code, user_token)
+            
 
     def __init__(self):
         BASE_DIR=os.path.dirname(os.path.abspath(__file__))
