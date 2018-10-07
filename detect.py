@@ -113,7 +113,7 @@ class Detector:
         if self.eero.needs_login():
             user_token = self.eero.login(phone_number)
             verifile = self.verifile
-            os.remove(verifile)
+            if os.path.isfile(verifile): os.remove(verifile)
             while self.eero.needs_login():
                 for i in range(60):
                     self.logger.info("waiting on verifile!")
