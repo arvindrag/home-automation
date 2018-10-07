@@ -26,7 +26,7 @@ class MyBot:
 	SEARCHPAT = 	r"/SEARCHCAST:(.*)"
 	JUSTADDPAT = 	r"/JUSTADD:(.*)"
 	CLEANPAT = 	r"/CLEAN:(.*)"
-	DIGITS = r"[0-9]*"
+	DIGITS = r"([0-9]*)"
 	def ACTION_MAP(self): 
 		dic = {
 		self.ADD_AND_CAST_PAT: self.add_and_cast,
