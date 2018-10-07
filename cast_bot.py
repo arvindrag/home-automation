@@ -26,13 +26,14 @@ class MyBot:
 	SEARCHPAT = 	r"/SEARCHCAST:(.*)"
 	JUSTADDPAT = 	r"/JUSTADD:(.*)"
 	CLEANPAT = 	r"/CLEAN:(.*)"
+	DIGITS = r"[0-9]*"
 	def ACTION_MAP(self): 
 		dic = {
 		self.ADD_AND_CAST_PAT: self.add_and_cast,
 		# SEARCHPAT: self.search_and_cast,
-		self.JUSTADDPAT: self.just_add
-		# CLEAN: self.clean
-		r"[0-9]*": self.replace_verifile
+		self.JUSTADDPAT: self.just_add,
+		# CLEAN: self.clean,
+		self.DIGITS: self.replace_verifile
 		}
 		return dic
 	EPPAT = r"(.*)season ([0-9]+) episode ([0-9]+)"
