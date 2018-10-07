@@ -48,6 +48,7 @@ class MyBot:
 	
 	def replace_verifile(self, text):
 		v = open(self.verifile, "w")
+		self.logger("writing verifile: {} with {}".format(self.verifile, text))
 		v.write(text)
 		v.close()
 
@@ -102,6 +103,7 @@ class MyBot:
 			if m:
 				searchstr = self.pars(m.groups()[0])
 				action = self.ACTION_MAP()[pat]
+				self.logger("doing action: {}".format(pat))
 				action(searchstr)
 				break
 
