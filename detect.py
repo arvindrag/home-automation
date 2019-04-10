@@ -96,18 +96,22 @@ class Detector:
 
     def detect(self):
         while True:
-            devices = self.eero.devices(self.network['url'])
-            returned = self.check_phones(devices)
-            self.logger.info("returned device(s) found: {}".format(returned))
-            if len(returned)>0:
-                self.telebot.sendMessage(self.creds['ids']['telegram_id'], 
-                    "returned device found: {}".format(returned))
-                for r in returned:
-                    name = r.lower().split('-')[0].split('_')[0].replace('iphone','').replace('phone','').strip('s')
-                    path = os.path.join(self.basedir, name+".wav")
-                    subprocess.call(["flite","-o",path,"Proximity Warning, {0} detected. Repeat {0} has been detected ".format(name)])
-                    self.castnow.cast(path, device='LIVING_ROOM')
-            time.sleep(self.SLEEP)
+            try:
+                devices = self.eero.devices(self.network['url'])
+                returned = self.check_phones(devices)
+                self.logger.info("returned device(s) found: {}".format(returned))
+                if len(returned)>0:
+                    self.telebot.sendMessage(self.creds['ids']['telegram_id'], 
+                        "returned device found: {}".format(returned))
+                    for r in returned:
+                        name = r.lower().split('-')[0].split('_')[0].replace('iphone','').replace('phone','').strip('s')
+                        path = os.path.join(self.basedir, name+".wav")
+                        subprocess.call(["flite","-o",path,"Proximity Warning, {0} detected. Repeat {0} has been detected ".format(name)])
+                        self.castnow.cast(path, device='LIVING_ROOM')
+                time.sleep(self.SLEEP)
+            except Exception as e:
+                self.logger.info("Error occurred! \n" + e.message + "\n Backing off for a bit")
+                time.sleep(self.SLEEP*3)
 
     def verify(self, phone_number):
         if self.eero.needs_login():
