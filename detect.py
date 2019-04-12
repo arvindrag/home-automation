@@ -110,8 +110,8 @@ class Detector:
                         self.castnow.cast(path, device='LIVING_ROOM')
                 time.sleep(self.SLEEP)
             except Exception as e:
-                self.logger.info("Error occurred! \n" + e.message + "\n Backing off for a bit")
-                time.sleep(self.SLEEP*3)
+                self.logger.info("Error occurred! Backing off for a bit")
+                time.sleep(self.SLEEP*5)
 
     def verify(self, phone_number):
         if self.eero.needs_login():
