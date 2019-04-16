@@ -39,8 +39,10 @@ class TPBParser:
 			link = best[0]
 			self.logger.info("sending back: {}".format(link))
 			return best[0]
-		except:
+		except Exception as e:
 			self.logger.info("Giving up and doing first available magnet link")
+			if hasattr(e, 'message'):
+        		self.logger.error(e.message)
 			soup = BeautifulSoup(self.get_page(encoded_term), 'html.parser')
 			link = soup.find_all(href=re.compile('magnet'))[0]['href']
 			self.logger.info("sending back: {}".format(link))
