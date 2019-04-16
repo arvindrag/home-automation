@@ -36,7 +36,7 @@ class TPBParser:
 				seeders,leechers = filter(number.match, mag.parent.parent.stripped_strings)
 				maglinks.append((href,seeders,leechers))
 			best = max(maglinks, key=lambda a: a[2])
-			link = best[0])
+			link = best[0]
 			self.logger.info("sending back: {}".format(link))
 			return best[0]
 		except:
