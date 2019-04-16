@@ -94,6 +94,7 @@ class MyBot:
 		self.logger.info('add and cast for {}'.format(searchstr))
 		self.logger.info('looking for {}'.format(searchstr))
 		magnet = self.tpb.get_magnet_links(searchstr)
+		self.logger.info('got back magnet: {}'.format(magnet))
 		name = self.putio.add(magnet)
 
 	# def clean(self, searchstr):
