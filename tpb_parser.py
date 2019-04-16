@@ -26,7 +26,7 @@ class TPBParser:
 	# and more seeds is better. but here we are
 	def get_magnet_links(self, encoded_term):
 		try:
-			soup = BeautifulSoup(self.get_page(encoded_term+"%20720p", 'html.parser'))
+			soup = BeautifulSoup(self.get_page(encoded_term+"%20720p"), 'html.parser')
 			mags = soup.find_all(href=re.compile('magnet'))
 			number=re.compile(r'[0-9]+')
 			maglinks=list()
@@ -37,7 +37,7 @@ class TPBParser:
 			best = max(maglinks, key=lambda a: a[2])
 			return best[0]
 		except:
-			soup = BeautifulSoup(self.get_page(encoded_term, 'html.parser'))
+			soup = BeautifulSoup(self.get_page(encoded_term), 'html.parser')
 			return soup.find_all(href=re.compile('magnet'))[0]['href']
 		
 
