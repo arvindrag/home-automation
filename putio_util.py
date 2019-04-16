@@ -34,6 +34,7 @@ class PutIO:
 	def add(self, magnet):
 		url = "{}/transfers/add".format(self.API)
 		post = requests.post(url, data = {'url' : magnet, 'save_parent_id':0, 'oauth_token':self.token})
+		self.logger.info("tried to add, got back {}".format(post.json()))
 		return post.json()
 
 	def add_and_await(self, magnet, await=True):

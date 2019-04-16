@@ -44,6 +44,6 @@ class TPBParser:
 			soup = BeautifulSoup(self.get_page(encoded_term), 'html.parser')
 			link = soup.find_all(href=re.compile('magnet'))[0]['href']
 			self.logger.info("sending back: {}".format(link))
-			return best[0]
+			return link
 		
 
