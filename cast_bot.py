@@ -27,11 +27,12 @@ class MyBot:
 	JUSTADDPAT = 	r"/JUSTADD:(.*)"
 	CLEANPAT = 	r"/CLEAN:(.*)"
 	DIGITS = r"([0-9]+)"
+	ALLCAPSPAT = r"[A-Z]+"
 
 	def ACTION_MAP(self): 
 		dic = {
 		self.ADD_AND_CAST_PAT: self.add_and_cast,
-		# SEARCHPAT: self.search_and_cast,
+		SEARCHPAT: self.search_and_cast,
 		self.JUSTADDPAT: self.just_add,
 		# CLEAN: self.clean,
 		self.DIGITS: self.replace_verifile
@@ -60,6 +61,15 @@ class MyBot:
 	def pars(self, msg):
 		msg = re.sub(r'[^a-zA-Z0-9\s]', '', msg)
 		m = re.match(self.EPPAT, msg)
+		words = msg.split(' ')
+		nmsg = list()
+		for w in words:
+			a = re.match(self.ALLCAPSPAT, w)
+			if a:
+				nmsg.append(' '.join(w))
+			else:
+				nmsg.append(w)
+		msg = ' '.join(nmsg)
 		if m:
 			string, season, episode = m.groups()
 			options = "%s S%02dE%02d"%(string, int(season), int(episode))
