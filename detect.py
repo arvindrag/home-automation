@@ -107,7 +107,7 @@ class Detector:
                         name = r.lower().split('-')[0].split('_')[0].replace('iphone','').replace('phone','').strip('s')
                         path = os.path.join(self.basedir, name+".wav")
                         subprocess.call(["flite","-o",path,"Proximity Warning, {0} detected. Repeat {0} has been detected ".format(name)])
-                        self.castnow.cast(path, device='LIVING_ROOM')
+                        # self.castnow.cast(path, device='LIVING_ROOM')
                 time.sleep(self.SLEEP)
             except Exception as e:
                 self.logger.info("Error occurred! Backing off for a bit")
