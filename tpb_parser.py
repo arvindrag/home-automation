@@ -39,6 +39,8 @@ class TPBParser:
 			max_seeders=best[2]
 			if max_seeders<20:
 				raise Exception('not enough seeders!')
+			else:
+				self.logger.info('seeders for link {}'.format(max_seeders))
 			link = best[0]
 			self.logger.info("sending back: {}".format(link))
 			return best[0]
