@@ -32,7 +32,7 @@ class MyBot:
 	def ACTION_MAP(self): 
 		dic = {
 		self.ADD_AND_CAST_PAT: self.add_and_cast,
-		SEARCHPAT: self.search_and_cast,
+		# SEARCHPAT: self.search_and_cast,
 		self.JUSTADDPAT: self.just_add,
 		# CLEAN: self.clean,
 		self.DIGITS: self.replace_verifile
