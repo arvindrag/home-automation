@@ -66,12 +66,14 @@ class MyBot:
 		for w in words:
 			a = re.match(self.ALLCAPSPAT, w)
 			if a:
+				self.logger.info('single letters found')
 				nmsg.append(' '.join(w))
 			else:
 				nmsg.append(w)
 		msg = ' '.join(nmsg)
 		if m:
 			string, season, episode = m.groups()
+			self.logger.info('show ep found')
 			options = "%s S%02dE%02d"%(string, int(season), int(episode))
 		else:
 			options = msg
