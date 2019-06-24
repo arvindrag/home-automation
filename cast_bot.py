@@ -64,8 +64,7 @@ class MyBot:
 		words = msg.split(' ')
 		nmsg = list()
 		for w in words:
-			a = re.match(self.ALLCAPSPAT, w)
-			if a:
+			if w.isupper():
 				self.logger.info('single letters found')
 				nmsg.append(' '.join(w))
 			else:
