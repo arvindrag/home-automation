@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import re
 
 class TPBParser:
-	API = 'https://openpirate.org'
+	API = 'https://pirateproxy.ch'
 	def __init__(self, logger):
 		self.logger = logger
 
@@ -36,6 +36,9 @@ class TPBParser:
 				seeders,leechers = filter(number.match, mag.parent.parent.stripped_strings)
 				maglinks.append((href,seeders,leechers))
 			best = max(maglinks, key=lambda a: a[2])
+			max_seeders=best[2]
+			if max_seeders<20:
+				raise Exception('not enough seeders!')
 			link = best[0]
 			self.logger.info("sending back: {}".format(link))
 			return best[0]
