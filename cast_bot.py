@@ -60,7 +60,6 @@ class MyBot:
 
 	def pars(self, msg):
 		msg = re.sub(r'[^a-zA-Z0-9\s]', '', msg)
-		m = re.match(self.EPPAT, msg)
 		words = msg.split(' ')
 		nmsg = list()
 		for w in words:
@@ -69,9 +68,8 @@ class MyBot:
 				nmsg.append(' '.join(w))
 			else:
 				nmsg.append(w)
-				self.logger.info(' '.join(nmsg))
 		msg = ' '.join(nmsg)
-		self.logger.info(msg)
+		m = re.match(self.EPPAT, msg)
 		if m:
 			string, season, episode = m.groups()
 			self.logger.info('show ep found')
